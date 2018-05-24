@@ -6,7 +6,7 @@ contract ShardingManager is SMCHelper {
 
     // Collators
 
-    function registerCollator() public payable {
+    function registerCollator() public payable returns(bool) {
         require(!collatorRegistry[msg.sender].deposited);
         require(msg.value >= COLLATOR_DEPOSIT);
 
@@ -14,6 +14,8 @@ contract ShardingManager is SMCHelper {
         collatorPool.push(msg.sender);
         collatorPoolLen++;
         collatorRegistry[msg.sender] = Collator(0, index, true);
+
+        return true;
     }
 
     function deregisterCollator() public returns(bool) {
