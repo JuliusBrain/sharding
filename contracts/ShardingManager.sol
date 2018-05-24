@@ -79,9 +79,4 @@ contract ShardingManager is SMCHelper {
         msg.sender.transfer(balance);
     }
 
-    // TODO:
-    // function getEligibleCollator(uint256 _shardId, uint256 _period) public returns(address) {
-        
-    // }
-
 }
