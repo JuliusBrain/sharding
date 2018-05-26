@@ -1,7 +1,7 @@
 pragma solidity ^0.4.23;
 
 import "./SMCFields.sol";
-
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 /**
  * @title ShardingManager
  * @author Adrian Hetman
@@ -9,6 +9,8 @@ import "./SMCFields.sol";
  * @notice For now SMC only implements registration of Collators and Proposers
  */
 contract ShardingManager is SMCFields {
+    
+    using SafeMath for uint256;
 
     /**
     * @dev Adds an entry to collatorRegistry, updates the collator pool, locks a deposit of size COLLATOR_DEPOSIT.
@@ -19,7 +21,7 @@ contract ShardingManager is SMCFields {
 
         uint index = collatorPoolLen; 
         collatorPool.push(msg.sender);
-        collatorPoolLen++;
+        collatorPoolLen = collatorPoolLen.add(1);
         collatorRegistry[msg.sender] = Collator(0, index, true);
     }
 
@@ -32,7 +34,7 @@ contract ShardingManager is SMCFields {
         uint index = collatorRegistry[msg.sender].poolIndex;
         collatorRegistry[msg.sender].deregistered = block.number / PERIOD_LENGTH;
         delete collatorPool[index];
-        collatorPoolLen--;
+        collatorPoolLen = collatorPoolLen.sub(1);
     }
 
     /**
