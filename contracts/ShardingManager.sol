@@ -1,12 +1,11 @@
 pragma solidity ^0.4.23;
 
-import "./SMCHelper.sol";
+import "./SMCFields.sol";
 
-contract ShardingManager is SMCHelper {
+contract ShardingManager is SMCFields {
 
     // Collators
-
-    function registerCollator() public payable returns(bool) {
+    function registerCollator() public payable {
         require(!collatorRegistry[msg.sender].deposited);
         require(msg.value >= COLLATOR_DEPOSIT);
 
@@ -14,26 +13,18 @@ contract ShardingManager is SMCHelper {
         collatorPool.push(msg.sender);
         collatorPoolLen++;
         collatorRegistry[msg.sender] = Collator(0, index, true);
-
-        return true;
     }
 
-    function deregisterCollator() public returns(bool) {
+    function deregisterCollator() public {
         require(collatorRegistry[msg.sender].deposited);
         
         uint index = collatorRegistry[msg.sender].poolIndex;
-        if(collatorPool[index] == msg.sender){
-            collatorRegistry[msg.sender].deregistered = block.number / PERIOD_LENGTH;
-            delete collatorPool[index];
-            collatorPoolLen--;
-        } else {
-            return false;
-        }
-
-        return true;
+        collatorRegistry[msg.sender].deregistered = block.number / PERIOD_LENGTH;
+        delete collatorPool[index];
+        collatorPoolLen--;
     }
 
-    function releaseCollator() public returns(bool) {
+    function releaseCollator() public {
         require(collatorRegistry[msg.sender].deposited);
         require(collatorRegistry[msg.sender].deregistered != 0);
         require(((block.number / PERIOD_LENGTH) > collatorRegistry[msg.sender].deregistered + COLLATOR_LOCKUP_LENGTH));

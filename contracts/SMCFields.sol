@@ -1,6 +1,6 @@
 pragma solidity ^0.4.23;
 
-contract SMCHelper {
+contract SMCFields {
 
     struct CollationHeader {
         uint shardId;
@@ -25,17 +25,17 @@ contract SMCHelper {
         bool deposited;
     }
 
-    address[] collatorPool;
-    uint collatorPoolLen;
-    address[] proposerPool;
-    uint proposerPoolLen;
-    uint[] emptySlotsStack;
-    uint emptySlotsStackTop;
+    address[] public collatorPool;
+    uint public collatorPoolLen;
+    address[] public proposerPool;
+    uint public proposerPoolLen;
+    uint[] public emptySlotsStack;
+    uint public emptySlotsStackTop;
     
-    mapping(address => Collator) collatorRegistry;
-    mapping(address => Proposer) proposerRegistry;
+    mapping(address => Collator) public collatorRegistry;
+    mapping(address => Proposer) public proposerRegistry;
 
-    mapping (uint => mapping (bytes32 => bytes32)) collationTrees;
+    mapping (uint => mapping (bytes32 => bytes32)) public collationTrees;
 
     // Shards
     uint constant SHARD_COUNT = 100;
@@ -48,7 +48,7 @@ contract SMCHelper {
     uint constant COLLATOR_SUBSIDY = 0.001 ether;
     
     // Registries
-    uint constant COLLATOR_DEPOSIT = 1000 ether;
+    uint constant COLLATOR_DEPOSIT = 5 ether;
     uint constant PROPOSER_DEPOSIT = 1 ether;
     uint constant MIN_PROPOSER_BALANCE = 0.1 ether;
     uint constant COLLATOR_LOCKUP_LENGTH = 16128;
