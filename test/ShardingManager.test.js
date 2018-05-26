@@ -46,6 +46,9 @@ contract('ShardingManager', (accounts) => {
     const collatorAddress = accounts[1];
     const proposerAddress = accounts[2];
 
+    const periodLength = 5;
+
+
     beforeEach('setup contract for each test', async () => {
         smc = await ShardingManager.new();
     })
@@ -90,12 +93,13 @@ contract('ShardingManager', (accounts) => {
             
             // when
             await smc.deregisterCollator({from: collatorAddress});
-
+            
             // then
             (await smc.collatorPoolLen()).should.be.bignumber.equal(0);
             (await smc.collatorPool(0)).should.be.equal(nullAddress);
+            const expectedDeregisterNumber = parseInt(web3.eth.blockNumber / periodLength);
             const collatorStructDeregistered = await smc.collatorRegistry(collatorAddress);
-            (await collatorStructDeregistered[0]).should.be.bignumber.not.equal(0); 
+            (await collatorStructDeregistered[0]).should.be.bignumber.equal(expectedDeregisterNumber);
         });
 
         it('should fail when deregistering non-existing collator', async () => { 
@@ -147,8 +151,9 @@ contract('ShardingManager', (accounts) => {
             await smc.deregisterProposer({from: proposerAddress});
 
             // then
+            const expectedDeregisterNumber = parseInt(web3.eth.blockNumber / periodLength);
             const proposerStructDeregistered = await smc.proposerRegistry(proposerAddress);
-            (await proposerStructDeregistered[0]).should.be.bignumber.not.equal(0); 
+            (await proposerStructDeregistered[0]).should.be.bignumber.equal(expectedDeregisterNumber); 
         });
 
         it('should fail when deregistering non-existing proposer', async () => { 
@@ -160,18 +165,37 @@ contract('ShardingManager', (accounts) => {
         });
     });
 
-    describe('Proposer balance', () => {
-        it('should add balance to a proposer', async () => {
-            // // given
-            // await smc.registerProposer({from: proposerAddress, value: ether(1)});
+    // TO DO
+    // describe('Release of Proposer', () => {
+    //     it('should release proposer', async () => {
+    //         // given
+    //         const exptectedBalance = await web3.eth.getBalance(proposerAddress);
+    //         await smc.registerProposer({from: proposerAddress, value: ether(1)});
+    //         await smc.deregisterProposer({from: proposerAddress});
+
+    //         // when
+    //         await mineNBlocks(49*5);
+    //         await smc.releaseProposer({from: proposerAddress, gas : '1000000'}); 
             
-            // // when
-            // await smc.proposerAddBalance(1, {from: proposerAddress, value: ether(2)});
+    //         // then
+    //         (await web3.eth.getBalance(proposerAddress)).should.be.bignumber.equal(exptectedBalance);  
+    //     });
 
-            // // then
+    // });
+
+    // TO DO
+    // describe('Proposer balance', () => {
+    //     it('should add balance to a proposer', async () => {
+    //         // given
+    //         await smc.registerProposer({from: proposerAddress, value: ether(1)});
+            
+    //         // when
+    //         await smc.proposerAddBalance(1, {from: proposerAddress, value: ether(2)});
+
+    //         // then
            
-        });
+    //     });
 
-    });
+    // });
 
 });

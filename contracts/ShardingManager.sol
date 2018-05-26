@@ -7,7 +7,7 @@ contract ShardingManager is SMCFields {
     // Collators
     function registerCollator() public payable {
         require(!collatorRegistry[msg.sender].deposited);
-        require(msg.value >= COLLATOR_DEPOSIT);
+        require(msg.value == COLLATOR_DEPOSIT);
 
         uint index = collatorPoolLen; 
         collatorPool.push(msg.sender);
@@ -50,14 +50,14 @@ contract ShardingManager is SMCFields {
     function releaseProposer() public {
         require(proposerRegistry[msg.sender].deposited);
         require(proposerRegistry[msg.sender].deregistered != 0);
-        require(((block.number / PERIOD_LENGTH) > proposerRegistry[msg.sender].deregistered + PROPOSER_LOCKUP_LENGTH));
+        require(((block.number / PERIOD_LENGTH) > (proposerRegistry[msg.sender].deregistered + PROPOSER_LOCKUP_LENGTH)));
 
         msg.sender.transfer(PROPOSER_DEPOSIT);
     }
 
     function proposerAddBalance(uint _shardId) public payable {
         require(_shardId < SHARD_COUNT);
-        require(((_shardId & NETWORK_ID) >> 7) == 1);
+        require((((_shardId) & NETWORK_ID) >> 7) == 1);
         require(proposerRegistry[msg.sender].deposited);
 
         proposerRegistry[msg.sender].balances[_shardId] = msg.value;
