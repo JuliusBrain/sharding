@@ -1,5 +1,11 @@
 pragma solidity ^0.4.23;
 
+/**
+ * @title SMC Fields
+ * @author Adrian Hetman
+ * @dev SMC for the Sharding Phase one from 10th of April. Not all fields are currently used.
+ * @notice Required fields for the SMC
+ */
 contract SMCFields {
 
     struct CollationHeader {
