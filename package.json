@@ -10,6 +10,7 @@
     "solium": "solium -d contracts/",
     "coverage": "solidity-coverage",
     "lint": "solium --dir contracts && eslint migrations/ test/",
+    "eslint": "eslint migrations/ test/",
     "flattener": "truffle-flattener",
     "test": "truffle test",
     "truffle": "truffle"
