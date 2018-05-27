@@ -27,8 +27,8 @@ contract SMCFields {
 
     struct Proposer {
         uint deregistered;
-        mapping(uint => uint) balances;
         bool deposited;
+        mapping(uint => uint) balances;
     }
 
     address[] public collatorPool;

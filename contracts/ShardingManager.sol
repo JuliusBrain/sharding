@@ -55,7 +55,7 @@ contract ShardingManager is SMCFields {
     function registerProposer() public payable {
         require(!proposerRegistry[msg.sender].deposited);
         require(msg.value >= PROPOSER_DEPOSIT);
-
+    
         proposerRegistry[msg.sender] = Proposer(0, true);
     }
 
@@ -83,8 +83,8 @@ contract ShardingManager is SMCFields {
     * @dev Adds msg.value to the balance of the proposer on shardId.
     */
     function proposerAddBalance(uint _shardId) public payable {
-        require(_shardId < SHARD_COUNT);
-        require((((_shardId) & NETWORK_ID) >> 7) == 1);
+        require((_shardId & 1) < SHARD_COUNT);
+        require(((_shardId & 1) & NETWORK_ID) == 1);
         require(proposerRegistry[msg.sender].deposited);
 
         proposerRegistry[msg.sender].balances[_shardId] = msg.value;
@@ -95,8 +95,8 @@ contract ShardingManager is SMCFields {
     * @dev Withdraws the balance of a proposer on shardId.
     */
     function proposerWithdrawBalance(uint _shardId) public {
-        require(_shardId < SHARD_COUNT);
-        require(((_shardId & NETWORK_ID) >> 7) == 1);
+        require((_shardId & 1) < SHARD_COUNT);
+        require(((_shardId & 1) & NETWORK_ID) == 1);
         require(proposerRegistry[msg.sender].deposited);
         
         uint balance = proposerRegistry[msg.sender].balances[_shardId];
