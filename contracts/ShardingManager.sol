@@ -54,7 +54,7 @@ contract ShardingManager is SMCFields {
     */
     function registerProposer() public payable {
         require(!proposerRegistry[msg.sender].deposited);
-        require(msg.value >= PROPOSER_DEPOSIT);
+        require(msg.value == PROPOSER_DEPOSIT);
     
         proposerRegistry[msg.sender] = Proposer(0, true);
     }
@@ -75,6 +75,7 @@ contract ShardingManager is SMCFields {
         require(proposerRegistry[msg.sender].deregistered != 0);
         require(((block.number / PERIOD_LENGTH) > (proposerRegistry[msg.sender].deregistered + PROPOSER_LOCKUP_LENGTH)));
 
+        delete proposerRegistry[msg.sender];
         msg.sender.transfer(PROPOSER_DEPOSIT);
     }
 

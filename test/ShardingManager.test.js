@@ -131,4 +131,20 @@ contract('ShardingManager', (accounts) => {
         });
     });
 
+    describe('Release of Proposer', () => {
+        it('should release proposer', async () => {
+            // given
+            await smc.registerProposer({from: proposerAddress, value: ether(1)});
+            await smc.deregisterProposer({from: proposerAddress});
+
+            // when
+            await mineNBlocks(49*5);
+            const initBalance = await web3.eth.getBalance(proposerAddress);
+            await smc.releaseProposer({from: proposerAddress}); 
+            
+            // then
+            (await web3.eth.getBalance(proposerAddress)).should.be.bignumber.greaterThan(initBalance);  
+        });
+    });
+
 });
