@@ -3,7 +3,7 @@
 
 const {
   mineNBlocks, EVMError, ether,
-} = require('./utils/testUtils.js');
+} = require('../utils/testUtils.js');
 
 const ShardingManager = artifacts.require('ShardingManager');
 
